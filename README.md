@@ -1,14 +1,15 @@
 ### Controller
 ```
-  public function update_user(Request $request, $id){
+    public function update_user(Request $request, $id){
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'username' => ['required', 'min:3', 'max:255', 'unique:users,username,'.$id],
             'email' => 'required|email:dns|unique:users,email,'.$id,
-            'password' => 'required|min:5|max:255'
         ]);
 
-        $validatedData['password'] = bcrypt($validatedData['password']);
+        if($request->password != NULL){
+            $validatedData['password'] = bcrypt($request->password);
+        }
 
         User::where('id', $id)->update($validatedData);
 
@@ -46,7 +47,6 @@
           <label for="password" class="form-label">Password</label>
           <input type="password" class="form-control" id="password" name="password"
           value="">
-          @error('password') <span class="text-danger">{{ $message }}</span>@enderror
 
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
