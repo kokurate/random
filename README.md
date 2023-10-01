@@ -1,93 +1,54 @@
-### fakultas model
-
+### Controller
 ```
-class fakultas extends Model
-{
-    use HasFactory;
-    
-    protected $guarded = ['id'];
+  public function update_user(Request $request, $id){
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'username' => ['required', 'min:3', 'max:255', 'unique:users,username,'.$id],
+            'email' => 'required|email:dns|unique:users,email,'.$id,
+            'password' => 'required|min:5|max:255'
+        ]);
 
-    public function jurusan_prodi()
-    {
-        return $this->hasMany(jurusan_prodi::class);
+        $validatedData['password'] = bcrypt($validatedData['password']);
+
+        User::where('id', $id)->update($validatedData);
+
+        return redirect()->route('user')->with('success','Data Berhasil Di Update!');
     }
 
-    public function user(){
-        return $this->hasMany(User::class);
-    }
-
-}
 ```
 
-### jurusan_prodi model
-```
-class jurusan_prodi extends Model
-{
-    use HasFactory;
-
-    protected $guarded = ['id'];
-
-    public function fakultas()
-    {
-        return $this->belongsTo(fakultas::class);
-    }
-
-    public function user(){
-        return $this->hasMany(User::class);
-    }
-}
-```
-
-### user model
-class User extends Authenticatable
-{
-    use HasApiTokens, HasFactory, Notifiable;
-
-    protected $guarded = ['id'];
-
- 
-    public function jurusan_prodi()
-    {
-        return $this->belongsTo(jurusan_prodi::class);
-    }
-
-    public function fakultas()
-    {
-        return $this->belongsTo(fakultas::class);
-    }
-
-}
-
-### jurusan_prodi migrations
+### view
 
 ```
-  Schema::create('jurusan_prodis', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('fakultas_id');
-            $table->foreign('fakultas_id')->references('id')->on('fakultas')->onDelete('cascade');        
-            $table->string('nama');
-            $table->timestamps();
-        });
-```
+<form action="/update_user/{{ $dataUser->id }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div class="mb-3">
+          <label for="name" class="form-label">Nama</label>
+          <input type="text" class="form-control" id="name" name="name"
+          value="{{ $dataUser->name }}">
+          @error('name') <span class="text-danger">{{ $message }}</span>@enderror
+        </div>
+        <div class="mb-3">
+          <label for="username" class="form-label">username</label>
+          <input type="text" class="form-control" id="username" name="username"
+          value="{{ $dataUser->username }}">
+          @error('username') <span class="text-danger">{{ $message }}</span>@enderror
 
-### fakultas migrations
-```
-Schema::create('fakultas', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama');
-            $table->timestamps();
-        });
-```
-### user migration
-```
-Schema::create('users', function (Blueprint $table) {
-            $table->id();
-    
-            $table->foreignId('fakultas_id')->nullable();
-            $table->foreignId('jurusan_prodi_id')->nullable();
-      
-            $table->rememberToken();
-            $table->timestamps();
-        });
-```
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="text" class="form-control" id="email" name="email"
+          value="{{ $dataUser->email }}">
+          @error('email') <span class="text-danger">{{ $message }}</span>@enderror
 
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password"
+          value="">
+          @error('password') <span class="text-danger">{{ $message }}</span>@enderror
+
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+```
