@@ -1,54 +1,82 @@
-### Controller
-```
-    public function update_user(Request $request, $id){
-        $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'username' => ['required', 'min:3', 'max:255', 'unique:users,username,'.$id],
-            'email' => 'required|email:dns|unique:users,email,'.$id,
-        ]);
+APP_NAME=Aplikasi-Manajemen-Surat
+APP_ENV=local
+APP_KEY=base64:24lDLRvv7+ixuu/zPmYkmDpsUXVFZyZzveyVfrdx2CU=
+APP_DEBUG=true
+APP_URL=http://127.0.0.1:8000
 
-        if($request->password != NULL){
-            $validatedData['password'] = bcrypt($request->password);
-        }
+LOG_CHANNEL=stack
+LOG_DEPRECATIONS_CHANNEL=null
+LOG_LEVEL=debug
 
-        User::where('id', $id)->update($validatedData);
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=letter-management-application
+DB_USERNAME=root
+DB_PASSWORD=
 
-        return redirect()->route('user')->with('success','Data Berhasil Di Update!');
-    }
+BROADCAST_DRIVER=log
+CACHE_DRIVER=file
+FILESYSTEM_DISK=local
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=file
+SESSION_LIFETIME=120
 
-```
+MEMCACHED_HOST=127.0.0.1
 
-### view
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
 
-```
-<form action="/update_user/{{ $dataUser->id }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <div class="mb-3">
-          <label for="name" class="form-label">Nama</label>
-          <input type="text" class="form-control" id="name" name="name"
-          value="{{ $dataUser->name }}">
-          @error('name') <span class="text-danger">{{ $message }}</span>@enderror
-        </div>
-        <div class="mb-3">
-          <label for="username" class="form-label">username</label>
-          <input type="text" class="form-control" id="username" name="username"
-          value="{{ $dataUser->username }}">
-          @error('username') <span class="text-danger">{{ $message }}</span>@enderror
+# MAIL_MAILER=smtp
+# MAIL_HOST=mailpit
+# MAIL_PORT=1025
+# MAIL_USERNAME=null
+# MAIL_PASSWORD=null
+# MAIL_ENCRYPTION=null
+# MAIL_FROM_ADDRESS="hello@example.com"
+# MAIL_FROM_NAME="${APP_NAME}"
 
-        </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="text" class="form-control" id="email" name="email"
-          value="{{ $dataUser->email }}">
-          @error('email') <span class="text-danger">{{ $message }}</span>@enderror
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=dprkpminahasa
+MAIL_PASSWORD=ewopvkxuudtjrbgj
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS=dprkpminahasa@gmail.com
+MAIL_FROM_NAME="${APP_NAME}"
 
-        </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" name="password"
-          value="">
 
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-```
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_DEFAULT_REGION=us-east-1
+AWS_BUCKET=
+AWS_USE_PATH_STYLE_ENDPOINT=false
+
+PUSHER_APP_ID=
+PUSHER_APP_KEY=
+PUSHER_APP_SECRET=
+PUSHER_HOST=
+PUSHER_PORT=443
+PUSHER_SCHEME=https
+PUSHER_APP_CLUSTER=mt1
+
+VITE_PUSHER_APP_KEY="${PUSHER_APP_KEY}"
+VITE_PUSHER_HOST="${PUSHER_HOST}"
+VITE_PUSHER_PORT="${PUSHER_PORT}"
+VITE_PUSHER_SCHEME="${PUSHER_SCHEME}"
+VITE_PUSHER_APP_CLUSTER="${PUSHER_APP_CLUSTER}"
+
+
+SWEET_ALERT_MIDDLEWARE_AUTO_CLOSE=true
+SWEET_ALERT_MIDDLEWARE_TOAST_POSITION='top-end'
+SWEET_ALERT_MIDDLEWARE_TOAST_CLOSE_BUTTON=true
+SWEET_ALERT_MIDDLEWARE_ALERT_CLOSE_TIME=5000
+SWEET_ALERT_AUTO_DISPLAY_ERROR_MESSAGES=true
+
+SWEET_ALERT_CONFIRM_DELETE_CONFIRM_BUTTON_TEXT='Hapus'
+SWEET_ALERT_CONFIRM_DELETE_CANCEL_BUTTON_TEXT='Batal'
+SWEET_ALERT_CONFIRM_DELETE_SHOW_CANCEL_BUTTON=true
+SWEET_ALERT_CONFIRM_DELETE_SHOW_CLOSE_BUTTON=true
+SWEET_ALERT_CONFIRM_DELETE_ICON='warning'
+SWEET_ALERT_CONFIRM_DELETE_SHOW_LOADER_ON_CONFIRM=true
